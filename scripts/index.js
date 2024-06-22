@@ -3,11 +3,11 @@ const cardTemplate = document.querySelector('#card-template').content;
 
 // @todo: DOM узлы
 
+    const places = document.querySelector('.places__list');
 // @todo: Функция создания карточки
+
 function addPlace(title, image) {
 
-
-    const places = document.querySelector('.places__list');
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
     cardElement.querySelector('.card__title').textContent = title;
     cardElement.querySelector('.card__image').src = image;
