@@ -1,5 +1,5 @@
 import './page/index.css';
-import { createCard, cardInit, deleteCard } from './components/cards.js';
+import { createCard, cardInit, deleteCard } from './components/card.js';
 import { openPopup, closePopup } from './components/modal.js';
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
