@@ -12,7 +12,7 @@ const cardTemplate = document.querySelector('#card-template').content;
 const places = document.querySelector('.places__list');
 const profileName = document.querySelector('.profile__title');
 const profileDescrition = document.querySelector('.profile__description');
-const profileAvatarImage = document.querySelector('.profile__image_img');
+const profileAvatarImage = document.querySelector('.profile__image');
 const editName = document.querySelector('.popup__input_type_name');
 const editDescription = document.querySelector('.popup__input_type_description');
 const placeTitle = document.querySelector('.popup__input_type_card-name');
@@ -94,7 +94,7 @@ Promise.all([getAllCards(), getUser()])
 
     profileName.textContent = userRes.name;
     profileDescrition.textContent = userRes.about;
-    profileAvatarImage.src = userRes.avatar;
+    profileAvatarImage.style.backgroundImage =`url(${userRes.avatar})` ;
 
     console.log(userRes, cardsRes);
 
@@ -123,7 +123,7 @@ formEditAvatar.addEventListener('submit', function (evt) {
     .then((result) => {
       console.log(result)
 
-      profileAvatarImage.src = result.avatar;
+      profileAvatarImage.style.backgroundImage =`url(${result.avatar})`;
 
       changeToInitialText(formEditAvatar);
       closePopup(avatarPopup);
