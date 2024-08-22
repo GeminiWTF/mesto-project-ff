@@ -1,3 +1,5 @@
+
+
 .card__like-button {
   width: 21px;
   height: 18px;
@@ -13,8 +15,22 @@
   -ms-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
+  
 }
 
 .card__like-button:hover {
   opacity: 0.6;
+}
+
+.likes{
+display: flex;
+flex-direction: column;
+
+}
+
+.card__like-count {
+  width: 10px;
+  height: 13px;
+  padding: 6px;
+  margin: 0;
 }

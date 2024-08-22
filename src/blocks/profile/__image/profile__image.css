@@ -7,6 +7,14 @@
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
+  clip-path: border-box;
+
+}
+
+.profile__image_img{
+height:100%;
+position:absolute;
+z-index: 1;
 }
 
 @media screen and (max-width: 740px) {
@@ -20,3 +28,31 @@
     margin-right: 0;
   }
 }
+
+  /* .profile__image:hover {
+
+}   */
+
+.profile__image:hover::after {
+  display: block;
+  
+    background: url('../../../images/edit-icon.svg') #000000a1;
+    background-repeat: no-repeat;
+  background-size: 50%;
+  background-position: 50% 50%;
+  content: "";
+
+  height: 120px;
+
+  position: absolute;
+
+  width: 120px;
+cursor: pointer;
+z-index: 1;
+}
+
+
+  /* .profile__image_img:hover{
+   
+    url('../../../images/edit-icon.svg');
+  } */

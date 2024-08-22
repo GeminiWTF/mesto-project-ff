@@ -20,3 +20,22 @@
     line-height: 15px;
   }
 }
+
+.popup__input:invalid {
+  border-bottom: 1px solid red; }
+
+
+.popup__input:valid{
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
+}
+
+
+.popup__error_visible {
+  color: red;
+  font-size: 9px;
+  line-height: 1px;
+}
+
+.popup__input:hover{
+  border: 2px solid #81cee6;
+}

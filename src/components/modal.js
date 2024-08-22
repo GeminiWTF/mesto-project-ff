@@ -23,3 +23,6 @@ export function closePopup(popup) {
     popup.removeEventListener('click', closePopupEvent);
 }
 
+
+
+

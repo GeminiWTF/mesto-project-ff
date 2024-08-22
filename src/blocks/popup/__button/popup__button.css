@@ -15,7 +15,7 @@
 }
 
 .popup__button:hover {
-  background: rgba(0, 0, 0, 0.8);
+ opacity:80%;
   cursor: pointer;
 }
 
@@ -24,4 +24,10 @@
     font-size: 14px;
     line-height: 17px;
   }
+}
+
+.popup__button_disabled {
+  background: white;
+  color: #C4C4C4;
+  border: 1px solid #C4C4C4;
 }
