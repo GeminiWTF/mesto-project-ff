@@ -29,16 +29,14 @@ z-index: 1;
   }
 }
 
-  /* .profile__image:hover {
 
-}   */
 
 .profile__image:hover::after {
   display: block;
   
     background: url('../../../images/edit-icon.svg') #000000a1;
     background-repeat: no-repeat;
-  background-size: 50%;
+  background-size: 26px 26px;
   background-position: 50% 50%;
   content: "";
 
@@ -52,7 +50,3 @@ z-index: 1;
 }
 
 
-  /* .profile__image_img:hover{
-   
-    url('../../../images/edit-icon.svg');
-  } */

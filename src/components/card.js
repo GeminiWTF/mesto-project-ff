@@ -1,6 +1,9 @@
 
 // @todo: Функция создания карточки
-export function createCard(cardTemplate, cardItem, onCardDelete, onCardClick, onLikeClick, userId) {
+import { deleteCard, like, unlike} from './api.js';
+
+
+export function createCard(cardTemplate, cardItem, onCardClick, userId) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   cardElement.querySelector('.card__title').textContent = cardItem.name;
   const image = cardElement.querySelector('.card__image');
@@ -10,7 +13,9 @@ export function createCard(cardTemplate, cardItem, onCardDelete, onCardClick, on
   cardElement.dataset.id=cardItem._id
 
   const likeButton=  cardElement.querySelector('.card__like-button');
-  likeButton.addEventListener('click', onLikeClick)
+  const likeCounter=cardElement.querySelector('.card__like-count');
+  likeButton.addEventListener('click', evt=> onLikeClick (likeButton, likeCounter,cardItem._id));
+
   cardElement.querySelector('.card__like-count').textContent = cardItem.likes.length;
 
   const deleteButton = cardElement.querySelector('.card__delete-button');
@@ -22,21 +27,46 @@ export function createCard(cardTemplate, cardItem, onCardDelete, onCardClick, on
     deleteButton.hidden = true;
   }
 
- 
-  cardItem.likes.forEach (function (like) {
-    if  (like._id == userId) {
-      likeButton.classList.add('card__like-button_is-active')
-       }
+
+
+ const liked=cardItem.likes.some (function (like) {
+    return  like._id == userId
   });
-  
+ if (liked)  {
+  likeButton.classList.add('card__like-button_is-active')
+}
   return cardElement;
 };
 
-const onLikeClick = ()=>{
-  if (cardItem.owner._id !== userId) {
-    cardElement.querySelector('.card__like-button').addEventListener('click', onLikeClick);
+
+
+function onLikeClick(likeButton, likeCounter, cardId) {
+  
+  if (likeButton.classList.contains('card__like-button_is-active')) {
+   
+    unlike(cardId)
+      .then(res => { 
+        likeButton.classList.remove('card__like-button_is-active') 
+        likeCounter.textContent = res.likes.length; })
+        .catch((err) => {
+          console.log(err);}) 
   }
-  else card__like-button.setAttribute ('disabled, true')
+  else {
+  
+    like(cardId)
+      .then(res => { 
+        likeButton.classList.add('card__like-button_is-active')
+        likeCounter.textContent = res.likes.length; })
+        .catch((err) => {
+          console.log(err);})
+  }
 }
 
-
+function onCardDelete(event) {
+  const listItem = event.target.closest('.places__item');
+  deleteCard(listItem.dataset.id)
+  .then (() => {
+    listItem.remove();})
+  .catch((err) => {
+    console.log(err);})
+};

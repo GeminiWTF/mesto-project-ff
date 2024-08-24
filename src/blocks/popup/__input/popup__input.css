@@ -22,7 +22,7 @@
 }
 
 .popup__input:invalid {
-  border-bottom: 1px solid red; }
+  border-bottom: 1px solid #FF0000; }
 
 
 .popup__input:valid{
@@ -31,9 +31,9 @@
 
 
 .popup__error_visible {
-  color: red;
-  font-size: 9px;
-  line-height: 1px;
+  color: #FF0000;
+  font-size: 12px;
+  line-height: 14px;
 }
 
 .popup__input:hover{

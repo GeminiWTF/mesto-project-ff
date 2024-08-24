@@ -1,10 +1,11 @@
 import './page/index.css';
 import { createCard, cardsInit } from './components/card.js';
 import { openPopup, closePopup } from './components/modal.js';
-// import { initialCards } from './cards.js';
-import { getAllCards, getUser, deleteCard, like, unlike, changeAvatar, changeProfile, changePlace } from './api.js';
-import { enableValidation, clearValidation } from './validation.js';
+import { getAllCards, getUser, changeAvatar, changeProfile, changePlace } from './components/api.js';
+import { enableValidation, clearValidation } from './components/validation.js';
 
+
+let myUserId;
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
 
@@ -29,92 +30,29 @@ const avatarEditProfile = document.querySelector('.profile__image');
 const avatarPopup = document.querySelector('.popup_type_avatar');
 const avatar = document.querySelector('.popup__input_type_avatar_url');
 
-
-function onCardClick(cardItem) {
-  popupImage.querySelector('.popup__image').src = cardItem.link;
-  popupImage.querySelector('.popup__caption').textContent = cardItem.name;
-  openPopup(popupImage);
-}
-
-function onLikeClick(evt) {
-  const likeButton = evt.target;
-  const listItem = event.target.closest('.places__item');
-  if (likeButton.classList.contains('card__like-button_is-active')) {
-    likeButton.classList.remove('card__like-button_is-active')
-    unlike(listItem.dataset.id)
-      .then(res => { listItem.querySelector('.card__like-count').textContent = res.likes.length; });
-  }
-  else {
-    likeButton.classList.add('card__like-button_is-active')
-    like(listItem.dataset.id)
-      .then(res => { listItem.querySelector('.card__like-count').textContent = res.likes.length; });
-  }
-}
-
-function onCardDelete(event) {
-  const listItem = event.target.closest('.places__item');
-  deleteCard(listItem.dataset.id);
-  listItem.remove();
-};
-
-// @todo: Вывести карточки на страницу
-
-// initialCards.forEach(function (cardItem) {
-//   const card = createCard(cardTemplate, cardItem, onCardDelete, onCardClick, onLikeClick);
-//   places.append(card);
-// });
-
-addCardButton.addEventListener('click', function () {
-  formNewPlace.reset();
-  clearValidation(addCardPopup);
-  openPopup(addCardPopup);
-});
-
-
-//редактирование профиля
-profileEditButton.addEventListener('click', function () {
-  editName.value = profileName.textContent;
-  editDescription.value = profileDescrition.textContent;
-  clearValidation(profilePopup);
-  openPopup(profilePopup);
-});
-
-enableValidation({
+const validationObject = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible'
-});
+};
 
+function onCardClick(cardItem) {
+  popupImage.querySelector('.popup__image').src = cardItem.link;
+  popupImage.querySelector('.popup__image').alt = cardItem.name;
+  popupImage.querySelector('.popup__caption').textContent = cardItem.name;
 
-Promise.all([getAllCards(), getUser()])
-  .then(([cardsRes, userRes]) => {
-
-    profileName.textContent = userRes.name;
-    profileDescrition.textContent = userRes.about;
-    profileAvatarImage.style.backgroundImage =`url(${userRes.avatar})` ;
-
-    console.log(userRes, cardsRes);
-
-    cardsRes.forEach(function (cardItem) {
-      const card = createCard(cardTemplate, cardItem, onCardDelete, onCardClick, onLikeClick, userRes._id);
-      places.append(card);
-    })
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-
-const avatarEdit = (evt) => {
-  console.log(evt)
-  clearValidation(avatarPopup);
-  openPopup(avatarPopup);
+  openPopup(popupImage);
 }
 
-avatarEditProfile.addEventListener('click', avatarEdit);
+
+avatarEditProfile.addEventListener('click', (evt) => {
+  console.log(evt)
+  clearValidation(formEditAvatar, validationObject);
+  openPopup(avatarPopup);
+});
 
 formEditAvatar.addEventListener('submit', function (evt) {
   changeTextButton(formEditAvatar);
@@ -123,17 +61,25 @@ formEditAvatar.addEventListener('submit', function (evt) {
     .then((result) => {
       console.log(result)
 
-      profileAvatarImage.style.backgroundImage =`url(${result.avatar})`;
+      profileAvatarImage.style.backgroundImage = `url(${result.avatar})`;
 
-      changeToInitialText(formEditAvatar);
       closePopup(avatarPopup);
     })
 
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => { changeToInitialText(formEditAvatar); })
 });
 
+
+//редактирование профиля
+profileEditButton.addEventListener('click', function () {
+  editName.value = profileName.textContent;
+  editDescription.value = profileDescrition.textContent;
+  clearValidation(formEditProfile, validationObject);
+  openPopup(profilePopup);
+});
 
 formEditProfile.addEventListener('submit', function (evt) {
   evt.preventDefault();
@@ -144,30 +90,37 @@ formEditProfile.addEventListener('submit', function (evt) {
 
       profileName.textContent = result.name;
       profileDescrition.textContent = result.about;
-      changeToInitialText(formEditProfile);
       closePopup(profilePopup);
     })
 
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => { changeToInitialText(formEditProfile); })
 });
 
+
+addCardButton.addEventListener('click', function () {
+  formNewPlace.reset();
+  clearValidation(formNewPlace, validationObject);
+  openPopup(addCardPopup);
+});
 
 formNewPlace.addEventListener('submit', function (evt) {
   changeTextButton(formNewPlace);
   evt.preventDefault()
   changePlace(placeTitle.value, placeLink.value)
     .then((result) => {
-      const card = createCard(cardTemplate, result, onCardDelete, onCardClick, onLikeClick);
+      const card = createCard(cardTemplate, result, onCardClick, myUserId);
       places.prepend(card);
-      changeToInitialText(formNewPlace);
+
       closePopup(addCardPopup);
     })
 
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => { changeToInitialText(formNewPlace); })
 });
 
 
@@ -180,3 +133,21 @@ function changeToInitialText(form) {
   const saveButton = form.querySelector('.popup__button')
   saveButton.textContent = "Сохранить";
 }
+
+enableValidation(validationObject);
+
+Promise.all([getAllCards(), getUser()])
+  .then(([cardsRes, userRes]) => {
+    myUserId = userRes._id;
+    profileName.textContent = userRes.name;
+    profileDescrition.textContent = userRes.about;
+    profileAvatarImage.style.backgroundImage = `url(${userRes.avatar})`;
+
+    cardsRes.forEach(function (cardItem) {
+      const card = createCard(cardTemplate, cardItem, onCardClick, userRes._id);
+      places.append(card);
+    })
+  })
+  .catch((err) => {
+    console.log(err);
+  });
