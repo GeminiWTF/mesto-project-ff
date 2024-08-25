@@ -2,7 +2,7 @@ import './page/index.css';
 import { createCard, cardsInit } from './components/card.js';
 import { openPopup, closePopup } from './components/modal.js';
 import { getAllCards, getUser, changeAvatar, changeProfile, changePlace } from './components/api.js';
-import { enableValidation, clearValidation } from './components/validation.js';
+import { enableValidation, clearValidation} from './components/validation.js';
 
 
 let myUserId;
@@ -49,6 +49,7 @@ function onCardClick(cardItem) {
 
 
 avatarEditProfile.addEventListener('click', (evt) => {
+  formEditAvatar.reset();
   console.log(evt)
   clearValidation(formEditAvatar, validationObject);
   openPopup(avatarPopup);

@@ -49,6 +49,7 @@ const setEventListeners = (formElement, validationObject) => {
 };
 
 
+
 export const enableValidation = (validationObject) => {
     const formList = Array.from(document.querySelectorAll(validationObject.formSelector));
     formList.forEach((formElement) => {
@@ -61,7 +62,8 @@ export const enableValidation = (validationObject) => {
 
 const hasInvalidInput = (inputList) => {
     return inputList.some((inputElement) => {
-        return !inputElement.validity.valid;
+        const value=inputElement.value;
+        return value===null || value=== "" || !inputElement.validity.valid;
     })
 
 }
@@ -78,14 +80,11 @@ const toggleButtonState = (inputList, buttonElement,validationObject) => {
 export const clearValidation = (form, validationObject) => {
 
     const buttonElement = form.querySelector(validationObject.submitButtonSelector);
-    console.log(buttonElement);
-    buttonElement.classList.remove(validationObject.inactiveButtonClass);
-    buttonElement.disabled = false;
-    const inputElements = form.querySelectorAll(validationObject.inputSelector);
-    inputElements.forEach((inputElement) => {
+    const inputList = Array.from(form.querySelectorAll(validationObject.inputSelector));
+
+    inputList.forEach((inputElement) => {
         hideInputError (form,inputElement,validationObject)
     })
 
+    toggleButtonState(inputList, buttonElement,validationObject);
 }
-
-
