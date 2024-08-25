@@ -9,7 +9,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js',
+    filename: '[name].[contenthash].js',
     publicPath: '',
   },
   mode: 'development',
@@ -54,7 +54,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html'
+      template: './src/index.html',
+      title:'Caching'
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
